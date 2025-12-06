@@ -1,0 +1,27 @@
+[project]
+name = "llm-tools-fragment-bridge"
+version = "0.1"
+description = "Expose LLM fragment loaders (yt, github, pdf) as callable tools"
+readme = "README.md"
+authors = [{name = "c0ffee0wl"}]
+license = "GPL-3.0"
+classifiers = []
+requires-python = ">=3.9"
+dependencies = [
+    "llm>=0.26"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://github.com/c0ffee0wl/llm-tools-fragment-bridge"
+Changelog = "https://github.com/c0ffee0wl/llm-tools-fragment-bridge/releases"
+Issues = "https://github.com/c0ffee0wl/llm-tools-fragment-bridge/issues"
+
+[project.entry-points.llm]
+fragment_bridge = "llm_tools_fragment_bridge"
+
+[project.optional-dependencies]
+test = ["pytest", "llm-echo>=0.3a1"]
