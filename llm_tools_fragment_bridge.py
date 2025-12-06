@@ -5,6 +5,9 @@ This plugin wraps whitelisted fragment loaders (yt, github, pdf) as tools
 that can be called by LLMs during conversations.
 """
 import llm
+import os
+import tempfile
+import urllib.request
 
 # Whitelist of fragment prefixes to expose as tools
 WHITELISTED_PREFIXES = ['yt', 'github', 'pdf']
@@ -47,6 +50,20 @@ Returns:
 }
 
 
+def _download_url_to_temp(url: str, suffix: str = '') -> str:
+    """Download URL to a temporary file, return the path."""
+    request = urllib.request.Request(
+        url,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+        }
+    )
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        with urllib.request.urlopen(request) as response:
+            tmp.write(response.read())
+        return tmp.name
+
+
 def _make_tool(prefix: str, loader):
     """Create a tool function that wraps a fragment loader."""
     metadata = TOOL_METADATA.get(prefix, {
@@ -55,10 +72,25 @@ def _make_tool(prefix: str, loader):
     })
 
     def tool_fn(argument: str) -> str:
+        temp_file = None
+        actual_arg = argument
+
+        # For PDF: download remote URLs to temp file
+        if prefix == 'pdf' and argument.startswith(('http://', 'https://')):
+            try:
+                temp_file = _download_url_to_temp(argument, suffix='.pdf')
+                actual_arg = temp_file
+            except Exception as e:
+                return f"Error downloading PDF from {argument}: {e}"
+
         try:
-            results = loader(argument)
+            results = loader(actual_arg)
         except Exception as e:
             return f"Error loading {prefix}:{argument}: {e}"
+        finally:
+            # Clean up temp file
+            if temp_file and os.path.exists(temp_file):
+                os.unlink(temp_file)
 
         if not isinstance(results, list):
             results = [results]
