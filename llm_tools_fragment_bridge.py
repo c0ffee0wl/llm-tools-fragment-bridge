@@ -18,17 +18,27 @@ TOOL_METADATA = {
         'name': 'load_yt',
         'doc': '''Load transcript from a YouTube video.
 
+Extracts the video transcript with timestamps and speaker labels when available.
+Returns full metadata including title, channel name, view count, and duration.
+Videos must have captions (auto-generated or manual) to extract text.
+
 Args:
     argument: YouTube URL or video ID
         Examples: "https://youtube.com/watch?v=dQw4w9WgXcQ", "dQw4w9WgXcQ"
 
 Returns:
-    Transcript text with metadata (title, channel, duration).
+    Transcript text with video metadata (title, channel, duration, view count).
+    Fails on: age-restricted, private, or caption-less videos.
 ''',
     },
     'github': {
         'name': 'load_github',
         'doc': '''Load source code from a GitHub repository.
+
+Fetches all text files from a public GitHub repository and returns them as
+concatenated content with file path headers. Useful for analyzing entire
+codebases or understanding project structure. Large repositories may be
+truncated to fit token limits.
 
 Args:
     argument: Repository in "owner/repo" format or full GitHub URL
@@ -36,19 +46,24 @@ Args:
 
 Returns:
     Repository files as text with source attribution headers.
-    Large repos may be truncated.
+    Not for: single file URLs, issues, PRs, or private repositories.
 ''',
     },
     'pdf': {
         'name': 'load_pdf',
         'doc': '''Extract text from a PDF document.
 
+Parses PDF files and extracts text content in markdown format, preserving
+basic structure like headings and lists where possible. Supports both local
+files and remote URLs. Works best with text-based PDFs.
+
 Args:
     argument: Local file path or URL to PDF
         Examples: "/path/to/doc.pdf", "https://example.com/report.pdf"
 
 Returns:
-    Extracted text in markdown format. Complex layouts may lose formatting.
+    Extracted text in markdown format.
+    Limitations: Scanned/image PDFs and password-protected files will fail.
 ''',
     },
 }
