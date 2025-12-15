@@ -16,39 +16,19 @@ WHITELISTED_PREFIXES = ['yt', 'github', 'pdf']
 TOOL_METADATA = {
     'yt': {
         'name': 'load_yt',
-        'doc': '''Load transcript text from a YouTube video.
-
-USE when the user asks to:
-- Summarize a YouTube video
-- Get the transcript/captions from a video
-- Analyze what was said in a video
-
-DO NOT use for:
-- Videos without captions/transcripts (will fail)
-- Age-restricted or private videos (not accessible)
-- Non-YouTube video platforms (use fetch_url instead)
+        'doc': '''Load transcript from a YouTube video.
 
 Args:
     argument: YouTube URL or video ID
         Examples: "https://youtube.com/watch?v=dQw4w9WgXcQ", "dQw4w9WgXcQ"
 
 Returns:
-    Video transcript text with metadata (title, channel, duration).
+    Transcript text with metadata (title, channel, duration).
 ''',
     },
     'github': {
         'name': 'load_github',
-        'doc': '''Load source code files from a GitHub repository.
-
-USE when the user asks to:
-- Analyze or review a GitHub repository
-- Read code from a specific GitHub project
-- Understand a codebase structure
-
-DO NOT use for:
-- Reading a single file URL (use fetch_url instead)
-- GitHub issues or pull requests (use fetch_url instead)
-- Private repositories (requires authentication not available)
+        'doc': '''Load source code from a GitHub repository.
 
 Args:
     argument: Repository in "owner/repo" format or full GitHub URL
@@ -61,25 +41,14 @@ Returns:
     },
     'pdf': {
         'name': 'load_pdf',
-        'doc': '''Extract text content from a PDF document.
-
-USE when the user asks to:
-- Read or analyze a PDF file
-- Summarize a PDF document
-- Extract information from a PDF
-
-DO NOT use for:
-- Web pages (use fetch_url instead)
-- Scanned image-only PDFs (text extraction will fail)
-- Password-protected PDFs (decryption not supported)
+        'doc': '''Extract text from a PDF document.
 
 Args:
     argument: Local file path or URL to PDF
         Examples: "/path/to/doc.pdf", "https://example.com/report.pdf"
 
 Returns:
-    Extracted text in markdown format with source attribution.
-    Complex layouts may lose formatting.
+    Extracted text in markdown format. Complex layouts may lose formatting.
 ''',
     },
 }
