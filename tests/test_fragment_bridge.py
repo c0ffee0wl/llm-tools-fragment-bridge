@@ -1,6 +1,5 @@
 """Tests for llm-tools-fragment-bridge plugin."""
 import llm
-import pytest
 
 
 def test_tools_registered():
